@@ -5,11 +5,11 @@ import java.util.Scanner;
 //DTO : Data Transfer Object
 //레이어간 데이터를 전송할 때 사용하는 객체
 public class GetTrainListDto {
-	private String departureStation; //출발 역
-	private String arrivalStation;//도착 역
-	private String departureTime;//출발 시간
-	private int numberOfPeople;//탑승 인원
-	
+	private String departureStation; // 출발 역
+	private String arrivalStation;// 도착 역
+	private String departureTime;// 출발 시간
+	private int numberOfPeople;// 탑승 인원
+
 	public GetTrainListDto() {
 		Scanner scanner = new Scanner(System.in);
 		System.out.print("출발 역 : ");
@@ -19,7 +19,7 @@ public class GetTrainListDto {
 		System.out.print("출발 시간 : ");
 		this.departureTime = scanner.nextLine();
 		System.out.print("인원 : ");
-		this.numberOfPeople = scanner.nextInt();	
+		this.numberOfPeople = scanner.nextInt();
 	}
 
 	public GetTrainListDto(String departureStation, String arrivalStation, String departureTime, int numberOfPeople) {
@@ -66,22 +66,19 @@ public class GetTrainListDto {
 		return "GetTrainListDto [departureStation=" + departureStation + ", arrivalStation=" + arrivalStation
 				+ ", departureTime=" + departureTime + ", numberOfPeople=" + numberOfPeople + "]";
 	}
-	
-	
+
 	public boolean isEmpty() {
-		return	this.departureStation.isBlank() ||
-							this.arrivalStation.isBlank() || 
-								this.departureTime.isBlank();
+		return this.departureStation.isBlank() || this.arrivalStation.isBlank() || this.departureTime.isBlank();
 	}
-	
+
 	public boolean isEqualStation() {
 		return this.departureStation.equals(this.arrivalStation);
 	}
-	
+
 	public boolean isEqualDepartureStation(String station) {
 		return this.departureStation.equals(station);
 	}
-	
+
 	public boolean isEqualArrivalStation(String station) {
 		return this.arrivalStation.equals(station);
 	}
