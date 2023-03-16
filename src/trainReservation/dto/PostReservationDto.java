@@ -3,7 +3,7 @@ package trainReservation.dto;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-
+//DTO : Data Transfer Object
 public class PostReservationDto {
 	
 	private String trainNumber; //호차

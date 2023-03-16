@@ -17,7 +17,7 @@ public class ReservationInfo {
 	
 	private String reservationNumber;//예약 번호
 	private String trainNumber;//열차 번호
-	private List<String> seats; //좌석 번호 리스트 //여기에 String이 아니라 객체가 들어가게됨 호차랑 좌석번호를 담고 있는 객체를
+	private List<String> seats; //좌석 번호 리스트  //여기에 String이 아니라 객체가 들어가게됨 호차랑 좌석번호를 담고 있는 객체를
 	private String departureStation;//출발역
 	private String departureTime;//출발시간
 	private String arrivalStation;//도착역

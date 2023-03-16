@@ -5,6 +5,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+import trainReservation.dto.GetReservationDto;
 import trainReservation.dto.GetTrainListDto;
 import trainReservation.dto.PostReservationDto;
 import trainReservation.entity.Cost;
@@ -20,7 +21,7 @@ public class ReservationService {
 
 	private static List<Train> trains = new ArrayList<Train>();
 	private static List<Cost> costs = new ArrayList<Cost>();
-	private static List<ReservationInfo> reservations = new ArrayList<ReservationInfo>();
+	private static List<ReservationInfo> reservations = new ArrayList<ReservationInfo>(); //예약 번호 입력시 예약 정보를 보여주기 위해 예약 정보를 저정할 리스트 생성
 	
 	private static DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
 
@@ -48,8 +49,9 @@ public class ReservationService {
 				if (!dto.isEqualDepartureStation(stopStationName)) { //정차역과 이름이 같은 인덱스는 continue를 만나지 않고 밑에 if문을 만나게 된다.
 					continue;
 				}
+				if (stopStation.getDepartureTime().equals("")) continue; //내가 실습했을 때 발생한 예외가 ""stopStation 시간에 ""에 대한 검증을 안 해줘서 그런 것(여기에서는 오류가 발생하지 않았던 것은 stopStation의 생성자의 매개변수가 바껴있어서 그런 것)
 				
-				LocalTime stationDepartureTime = LocalTime.parse(stopStation.getDepartureTime(), timeFormatter);
+				LocalTime stationDepartureTime = LocalTime.parse(stopStation.getDepartureTime(), timeFormatter);//는 timeFormatter의 포맷 형식이 아닌 문자열이 들어오면 바로 예외를 뱉어냄
 
 				// 입력한 시간 이후의 열차가 존재하는지에 대한 구문
 				// isBefore() : 지나간 날짜인지 비교하여 boolean 값 반환 stationDepartureTime이 departureTime보다
@@ -75,8 +77,7 @@ public class ReservationService {
 					continue;
 				}
 
-				if (stopStationIndex <= sameStationIndex) { // sameStationIndex(출발역 인덱스 값)보다 stopStationIndex이 작으면
-															// break문을 만남
+				if (stopStationIndex <= sameStationIndex) { // sameStationIndex(출발역 인덱스 값)보다 stopStationIndex이 작으면  break문을 만남
 					break;
 				}
 
@@ -175,6 +176,8 @@ public class ReservationService {
 		String departureTime = "";
 		String arrivalTime = "";
 		
+		//출발역과 도착역 입력의 검증은  위의 메서드 getPossibleTrainList에서 이미 검증을 했기 때문에 아래의 반복문은 반복문을 돌려 해당하는 출발역과 도착역의
+		//시간을 구하기 위해서 사용된 것
 		for (StopStation stopStation : train.getStopStations()) {//train : 입력 받은 기차 번호와 같은 기차의 정보를 담는 것
 			boolean isEqualDepartureStation =
 					getTrainListDto.isEqualDepartureStation(stopStation.getStationName());
@@ -185,20 +188,35 @@ public class ReservationService {
 		}
 		ReservationInfo reservationInfo = new ReservationInfo(
 				postReservationDto.getTrainNumber(), //이런식으로 자주 쓰이는 것은 변수명으로 빼놓으면 가독성이 좋아짐
-				postReservationDto.getSeats(), //검증 해놓은 값을 넣어 놓은 것임
+				postReservationDto.getSeats(), //이 메서드의 위 부분을 통해서 검증 해놓은 값을 넣어 놓은 것임
 				getTrainListDto.getDepartureStation(),
 				departureTime,
 				getTrainListDto.getArrivalStation(),
 				arrivalTime,
 				totalCost
 		);
-		reservations.add(reservationInfo);
+		reservations.add(reservationInfo); //예약을 완료한 뒤 사용자가 예약 번호를 입력할 시 해당 예약 정보를 보여주기 위해서 리스트에 저장을 하는 것
 		
 		return reservationInfo;
 		
 	}
 	
-	
+	public ReservationInfo getReservation(GetReservationDto dto) {
+		
+		ReservationInfo reservationInfo = null;
+		String reservationNumber = dto.getReservationNumber();
+		for (ReservationInfo item : reservations ) { //저장된 예약 정보에서 값을 꺼내와 기차번호와 같은 것이 있는지 검사하는 for문
+			
+			boolean isEqualReservationNubmer = 
+					reservationNumber.equals(item.getReservationNumber());
+			if (!isEqualReservationNubmer) continue;
+			
+			reservationInfo = item;
+			break;
+		}
+		
+		return reservationInfo; //여기에 반환되는 값에는 항상 인스턴스로 생성된 후 반환된다는 보장이 없으므로 항상 예외를 잘 검증해줘야한다.
+	}
 	
 	
 	private static void initData() {
