@@ -1,18 +1,17 @@
-package board.entity;
+package board.dto.response.board;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
-import board.dto.request.board.PostBoardDto;
-import board.repository.BoardRepository;
+import board.entity.Board;
+import board.entity.Comment;
+import board.entity.Like;
+//Board Entity와 똑같은 멤버 변수를 가지고 있는데 이 클래스를 사용하는 이유는
+//지금은 반환하려는 멤버 개수가 다 똑같지만
+//언제 어떻게 반환하려는 멤버가 달라질 수 있는지 모르기 때문에
+//Entity를 반환해서 사용하려면 유지보수할 때 매우 불편해지기 때문에
+//이런식으로 Dto를 만들어서 사용하는 습관을 들여야한다.
+public class PostBoardResponseDto {
 
-//		게시물
-//		게시물의 필요한 데이터들 : 이미지 / 작성자 닉네임 / 작성자 프로필 사진 / 작성일 / 제목 / 내용 / 댓글 수 / 좋아요 수 
-//		/ 조회수 / 좋아요(좋아요한 프로필 사진, 좋아요한 사용자 닉네임) 리스트
-//		/ 댓글(댓글 작성자 프로필 사진, 댓글 작성자 닉네임, 댓글 작성 지난 시간, 댓글 내용) 리스트
-public class Board {
 	private int boardNumber;
 	private String boardImageUrl;
 	private String writerEmail;
@@ -25,9 +24,9 @@ public class Board {
 	private List<Like> likeList;
 	private List<Comment> commentList;
 	
-	public Board() {}
+	public PostBoardResponseDto() {}
 
-	public Board(int boardNumber, String boardImageUrl, String writerEmail, String writerNickname,
+	public PostBoardResponseDto(int boardNumber, String boardImageUrl, String writerEmail, String writerNickname,
 			String writerProfileImageUrl, String writeDate, String title, String content, int viewCount,
 			List<Like> likeList, List<Comment> commentList) {
 		this.boardNumber = boardNumber;
@@ -43,21 +42,20 @@ public class Board {
 		this.commentList = commentList;
 	}
 
-	public Board(PostBoardDto dto, User user) {
-		Date now = new Date();
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-		this.boardNumber = ++BoardRepository.index;
-		this.boardImageUrl = dto.getBoardImageUrl();
-		this.writerEmail = user.getEmail();
-		this.writerNickname = user.getNickname();
-		this.writerProfileImageUrl = user.getProfileImageUrl();
-		this.writeDate = simpleDateFormat.format(now);
-		this.title = dto.getTitle();
-		this.content = dto.getContent();
-		this.viewCount = 0;
-		this.likeList = new ArrayList<Like>();
-		this.commentList = new ArrayList<Comment>();
+	public PostBoardResponseDto(Board board) {
+		this.boardNumber = board.getBoardNumber();
+		this.boardImageUrl = board.getBoardImageUrl();
+		this.writerEmail = board.getWriterEmail();
+		this.writerNickname = board.getWriterNickname();
+		this.writerProfileImageUrl = board.getWriterProfileImageUrl();
+		this.writeDate = board.getWriteDate();
+		this.title = board.getTitle();
+		this.content = board.getContent();
+		this.viewCount = board.getViewCount();
+		this.likeList = board.getLikeList();
+		this.commentList = board.getCommentList();
 	}
+	
 	public int getBoardNumber() {
 		return boardNumber;
 	}
@@ -148,10 +146,10 @@ public class Board {
 
 	@Override
 	public String toString() {
-		return "Board [boardNumber=" + boardNumber + ", boardImageUrl=" + boardImageUrl + ", writerEmail=" + writerEmail
-				+ ", writerNickname=" + writerNickname + ", writerProfileImageUrl=" + writerProfileImageUrl
-				+ ", writeDate=" + writeDate + ", title=" + title + ", content=" + content + ", viewCount=" + viewCount
-				+ ", likeList=" + likeList + ", commentList=" + commentList + "]";
+		return "PostBoardResponseDto [boardNumber=" + boardNumber + ", boardImageUrl=" + boardImageUrl
+				+ ", writerEmail=" + writerEmail + ", writerNickname=" + writerNickname + ", writerProfileImageUrl="
+				+ writerProfileImageUrl + ", writeDate=" + writeDate + ", title=" + title + ", content=" + content
+				+ ", viewCount=" + viewCount + ", likeList=" + likeList + ", commentList=" + commentList + "]";
 	}
-	
+		
 }
