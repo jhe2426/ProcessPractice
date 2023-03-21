@@ -41,4 +41,13 @@ public class BoardRepository {
 		return boardTable; //boardTable는 static이므로 인스턴스가 아니고 클래스변수이므로 밑에 findBy에 this로 접근할 필요가 없는 것
 	}
 	
+	public void deleteByBoardNumber(int boardNumber) {
+		for (int index = 0; index < boardTable.size(); index++) {
+			Board board = boardTable.get(index);
+			if (board.getBoardNumber() == boardNumber) {
+				boardTable.remove(board); //remove메서드에는 인스턴스를 넣어도 되고 인덱스 번호를 넣어도 됨
+				break;
+			}
+		}
+	}
 }

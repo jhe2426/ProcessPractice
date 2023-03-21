@@ -5,6 +5,7 @@ import java.util.Scanner;
 import board.common.constant.HttpStatus;
 import board.controller.BoardController;
 import board.controller.UserController;
+import board.dto.request.board.PatchBoardDto;
 import board.dto.request.board.PostBoardDto;
 import board.dto.request.user.SignInDto;
 import board.dto.request.user.SignUpDto;
@@ -89,7 +90,7 @@ public class BoardApplication {
 				break;
 				
 			case GET_BOARD ://게시물 상세보기
-				//GET, DETLE 통신 방식은 DTO클래스를 만들지 않을 것이다.
+				//GET, DETLE 통신 방식은 입력값이 존재할 때 DTO클래스를 만들지 않을 것이다.
 				//외부에서 내부에서 데이터가 넘어오는 거
 				//외부에서 무조건 정수로 입력하지 않을 수 있음
 				//외부에서 받아오는 모든 것은 예외가 발생할 수 있음
@@ -103,19 +104,56 @@ public class BoardApplication {
 					continue;
 				}
 
-				boardController.getBoard(boardNumber);
+				boardController.getBoard(boardNumber);			
+				break;
+			case PATCH_BOARD :
+				patchBoard();
+				break;
 				
-				break;	
+			case DELETE_BOARD ://GET, DETLE 통신 방식은 입력값이 존재할 때 DTO클래스를 만들지 않을 것이다.
+				int deleteBoardNumber = 0;
+				String deleteEmail = "";
+				try {
+					System.out.print("게시물 번호 : ");
+					deleteBoardNumber = Integer.parseInt(scanner.nextLine());
+					System.out.print("이메일 : ");
+					deleteEmail = scanner.nextLine();
+				} catch (Exception exception) {
+					exception.printStackTrace();
+					continue;
+				}
+				
+				boardController.deleteBoard(deleteBoardNumber, deleteEmail);			
+				break;
 			default:
 				System.out.println(HttpStatus.NOT_FOUND);
 			}
 			
 		}
 		
-	
-		
+	}
+	private static void patchBoard() {
+		Scanner scanner = new Scanner(System.in);
+
+		try {
+			PatchBoardDto patchBoardDto = new PatchBoardDto();
+			System.out.print("게시물 번호 : ");
+			String patchboardNumber = scanner.nextLine(); //scanner는 int형을 먼저 입력받고 String을 입력 받으면 오류가 발생하므로 이렇게 받는 것
+			patchBoardDto.setBoardNumber(Integer.parseInt(patchboardNumber));
+			System.out.print("제목 : ");
+			patchBoardDto.setTitle(scanner.nextLine());
+			System.out.print("내용 : ");
+			patchBoardDto.setContent(scanner.nextLine());
+			System.out.print("이미지 : ");
+			patchBoardDto.setBoardImageUrl(scanner.nextLine());
+			System.out.print("이메일 : ");
+			patchBoardDto.setEmail(scanner.nextLine());
+			
+			boardController.patchBoard(patchBoardDto);
+		} catch (Exception exception) {
+			exception.printStackTrace();
+		}
 		
 		
 	}
-
 }

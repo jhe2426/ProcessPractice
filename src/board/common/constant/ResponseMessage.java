@@ -11,5 +11,5 @@ public interface ResponseMessage {
 	public static final String PASSWORD_NOT_MATCH  = "Password Does Not Match";
 	public static final String FAIL_SIGN_IN  = "Sign in Failed";
 	
-	
+	public static final String NOT_PERMISSTION = "Do Not Have Permission";
 }
